@@ -76,7 +76,7 @@ df = load_data()
 # FACTORY DATA
 # ============================================================
 factory_coords = pd.DataFrame({
-    'Factory': ["Lot's O' Nuts", "Wicked Choccy's", 
+    'Factory': ["Lot's O' Nuts", "Wicked Choccy's",
                 'Sugar Shack', 'Secret Factory', 'The Other Factory'],
     'Latitude': [32.881893, 32.076176, 48.11914, 41.446333, 35.1175],
     'Longitude': [-111.768036, -81.088371, -96.18115, -90.565487, -89.971107]
@@ -445,8 +445,12 @@ elif page == "🏆 Recommendations":
         else:
             return 'background-color: #4a1c1c; color: white'
 
-    styled_df = filtered_recs.style.applymap(
-        color_improvement, subset=['Improvement (Days)'])
+    try:
+        styled_df = filtered_recs.style.map(
+            color_improvement, subset=['Improvement (Days)'])
+    except AttributeError:
+        styled_df = filtered_recs.style.applymap(
+            color_improvement, subset=['Improvement (Days)'])
     st.dataframe(styled_df, use_container_width=True)
 
     # Chart
