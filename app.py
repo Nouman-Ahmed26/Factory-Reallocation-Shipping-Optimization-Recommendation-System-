@@ -128,7 +128,6 @@ def generate_recommendations(priority=0.5):
 # ============================================================
 # SIDEBAR NAVIGATION
 # ============================================================
-st.sidebar.image("https://img.icons8.com/emoji/96/candy-emoji.png", width=80)
 st.sidebar.title("Nassau Candy")
 st.sidebar.markdown("**Factory Optimization System**")
 st.sidebar.markdown("---")
