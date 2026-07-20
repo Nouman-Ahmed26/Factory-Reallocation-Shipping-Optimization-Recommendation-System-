@@ -10,7 +10,6 @@ from sklearn.preprocessing import LabelEncoder
 # ============================================================
 st.set_page_config(
     page_title="Nassau Candy - Factory Optimization",
-    page_icon="🍬",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -76,7 +75,7 @@ df = load_data()
 # FACTORY DATA
 # ============================================================
 factory_coords = pd.DataFrame({
-    'Factory': ["Lot's O' Nuts", "Wicked Choccy's",
+    'Factory': ["Lot's O' Nuts", "Wicked Choccy's", 
                 'Sugar Shack', 'Secret Factory', 'The Other Factory'],
     'Latitude': [32.881893, 32.076176, 48.11914, 41.446333, 35.1175],
     'Longitude': [-111.768036, -81.088371, -96.18115, -90.565487, -89.971107]
@@ -130,32 +129,32 @@ def generate_recommendations(priority=0.5):
 # SIDEBAR NAVIGATION
 # ============================================================
 st.sidebar.image("https://img.icons8.com/emoji/96/candy-emoji.png", width=80)
-st.sidebar.title("🍬 Nassau Candy")
+st.sidebar.title("Nassau Candy")
 st.sidebar.markdown("**Factory Optimization System**")
 st.sidebar.markdown("---")
 
 page = st.sidebar.radio("Navigate", [
-    "🏠 Home Dashboard",
-    "🏭 Factory Optimizer",
-    "🔀 What-If Scenario",
-    "🏆 Recommendations",
-    "⚠️ Risk & Impact"
+    "Home Dashboard",
+    "Factory Optimizer",
+    "What-If Scenario",
+    "Recommendations",
+    "Risk & Impact"
 ])
 
 # Sidebar Filters
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 🎛️ Filters")
+st.sidebar.markdown("### Filters")
 selected_region = st.sidebar.selectbox(
     "Region", ["All"] + list(df['Region'].unique()))
 selected_ship_mode = st.sidebar.selectbox(
     "Ship Mode", ["All"] + list(df['Ship Mode'].unique()))
 priority_slider = st.sidebar.slider(
-    "⚖️ Optimization Priority",
+    "Optimization Priority",
     min_value=0.0, max_value=1.0, value=0.5, step=0.1,
     help="0 = Profit Focus | 1 = Speed Focus"
 )
 st.sidebar.markdown(
-    f"{'🚀 Speed Focus' if priority_slider > 0.7 else '💰 Profit Focus' if priority_slider < 0.3 else '⚖️ Balanced'}")
+    f"{'Speed Focus' if priority_slider > 0.7 else 'Profit Focus' if priority_slider < 0.3 else 'Balanced'}")
 
 # Apply filters
 filtered_df = df.copy()
@@ -167,8 +166,8 @@ if selected_ship_mode != "All":
 # ============================================================
 # PAGE 1 - HOME DASHBOARD
 # ============================================================
-if page == "🏠 Home Dashboard":
-    st.markdown('<p class="title-text">🍬 Nassau Candy Factory Optimization</p>',
+if page == "Home Dashboard":
+    st.markdown('<p class="title-text">Nassau Candy Factory Optimization</p>',
                 unsafe_allow_html=True)
     st.markdown('<p class="subtitle-text">Factory Reallocation & Shipping Optimization Recommendation System</p>',
                 unsafe_allow_html=True)
@@ -177,15 +176,15 @@ if page == "🏠 Home Dashboard":
     # KPI Metrics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("📦 Total Orders", f"{len(filtered_df):,}")
+        st.metric("Total Orders", f"{len(filtered_df):,}")
     with col2:
-        st.metric("⏱️ Avg Lead Time",
+        st.metric("Avg Lead Time",
                   f"{filtered_df['Lead Time'].mean():.0f} days")
     with col3:
-        st.metric("💰 Avg Gross Profit",
+        st.metric("Avg Gross Profit",
                   f"${filtered_df['Gross Profit'].mean():.2f}")
     with col4:
-        st.metric("🏭 Active Factories", "5")
+        st.metric("Active Factories", "5")
 
     st.markdown("---")
 
@@ -193,7 +192,7 @@ if page == "🏠 Home Dashboard":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("📊 Lead Time by Factory")
+        st.subheader("Lead Time by Factory")
         factory_lt = filtered_df.groupby(
             'Factory')['Lead Time'].mean().reset_index()
         fig = px.bar(factory_lt, x='Factory', y='Lead Time',
@@ -203,7 +202,7 @@ if page == "🏠 Home Dashboard":
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        st.subheader("💰 Profit by Division")
+        st.subheader("Profit by Division")
         div_profit = filtered_df.groupby(
             'Division')['Gross Profit'].mean().reset_index()
         fig = px.pie(div_profit, names='Division', values='Gross Profit',
@@ -215,7 +214,7 @@ if page == "🏠 Home Dashboard":
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("📦 Orders by Ship Mode")
+        st.subheader("Orders by Ship Mode")
         ship_counts = filtered_df['Ship Mode'].value_counts().reset_index()
         ship_counts.columns = ['Ship Mode', 'Count']
         fig = px.bar(ship_counts, x='Ship Mode', y='Count',
@@ -224,7 +223,7 @@ if page == "🏠 Home Dashboard":
         st.plotly_chart(fig, use_container_width=True)
 
     with col2:
-        st.subheader("🗺️ Factory Locations")
+        st.subheader("Factory Locations")
         fig = px.scatter_geo(factory_coords,
                              lat='Latitude', lon='Longitude',
                              text='Factory', scope='usa',
@@ -237,13 +236,13 @@ if page == "🏠 Home Dashboard":
 # ============================================================
 # PAGE 2 - FACTORY OPTIMIZER
 # ============================================================
-elif page == "🏭 Factory Optimizer":
-    st.title("🏭 Factory Optimization Simulator")
+elif page == "Factory Optimizer":
+    st.title("Factory Optimization Simulator")
     st.markdown("Select a product to see its predicted performance across all factories")
     st.markdown("---")
 
     selected_product = st.selectbox(
-        "🍬 Select Product", sorted(df['Product Name'].unique()))
+        "Select Product", sorted(df['Product Name'].unique()))
 
     product_df = df[df['Product Name'] == selected_product]
     current_factory = product_df['Factory'].iloc[0]
@@ -263,7 +262,7 @@ elif page == "🏭 Factory Optimizer":
     st.markdown("---")
 
     # Performance across all factories
-    st.subheader("📊 Performance Across All Factories")
+    st.subheader("Performance Across All Factories")
 
     factory_comparison = []
     for factory in factory_avg_leadtime.index:
@@ -271,7 +270,7 @@ elif page == "🏭 Factory Optimizer":
             'Factory': factory,
             'Avg Lead Time': factory_avg_leadtime[factory],
             'Avg Profit': factory_avg_profit[factory],
-            'Is Current': '⭐ Current' if factory == current_factory else 'Alternative'
+            'Is Current': 'Current' if factory == current_factory else 'Alternative'
         })
 
     comp_df = pd.DataFrame(factory_comparison)
@@ -281,7 +280,7 @@ elif page == "🏭 Factory Optimizer":
         fig = px.bar(comp_df, x='Factory', y='Avg Lead Time',
                      color='Is Current',
                      color_discrete_map={
-                         '⭐ Current': 'orange', 'Alternative': 'cyan'},
+                         'Current': 'orange', 'Alternative': 'cyan'},
                      template='plotly_dark',
                      title='Lead Time Comparison')
         st.plotly_chart(fig, use_container_width=True)
@@ -290,7 +289,7 @@ elif page == "🏭 Factory Optimizer":
         fig = px.bar(comp_df, x='Factory', y='Avg Profit',
                      color='Is Current',
                      color_discrete_map={
-                         '⭐ Current': 'orange', 'Alternative': 'green'},
+                         'Current': 'orange', 'Alternative': 'green'},
                      template='plotly_dark',
                      title='Profit Comparison')
         st.plotly_chart(fig, use_container_width=True)
@@ -302,26 +301,26 @@ elif page == "🏭 Factory Optimizer":
 
     if improvement > 0:
         st.success(
-            f"✅ Recommended: Move to **{best_factory}** — Save **{improvement:.0f} days**!")
+            f"Recommended: Move to **{best_factory}** — Save **{improvement:.0f} days**!")
     else:
         st.info(
-            f"✅ **{current_factory}** is already optimal for this product!")
+            f"**{current_factory}** is already optimal for this product!")
 
 # ============================================================
 # PAGE 3 - WHAT-IF SCENARIO
 # ============================================================
-elif page == "🔀 What-If Scenario":
-    st.title("🔀 What-If Scenario Analysis")
+elif page == "What-If Scenario":
+    st.title("What-If Scenario Analysis")
     st.markdown("Compare current vs recommended factory assignments")
     st.markdown("---")
 
     col1, col2 = st.columns(2)
     with col1:
         scenario_product = st.selectbox(
-            "🍬 Select Product", sorted(df['Product Name'].unique()))
+            "Select Product", sorted(df['Product Name'].unique()))
     with col2:
         scenario_factory = st.selectbox(
-            "🏭 Select Alternative Factory",
+            "Select Alternative Factory",
             factory_avg_leadtime.index.tolist())
 
     product_df = df[df['Product Name'] == scenario_product]
@@ -333,17 +332,17 @@ elif page == "🔀 What-If Scenario":
     new_profit = factory_avg_profit[scenario_factory]
 
     st.markdown("---")
-    st.subheader("📊 Side by Side Comparison")
+    st.subheader("Side by Side Comparison")
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("### 📍 Current Assignment")
+        st.markdown("### Current Assignment")
         st.info(f"**Factory:** {current_factory}")
         st.metric("Lead Time", f"{current_lt:.0f} days")
         st.metric("Gross Profit", f"${current_profit:.2f}")
 
     with col2:
-        st.markdown("### 🎯 Proposed Assignment")
+        st.markdown("### Proposed Assignment")
         st.success(f"**Factory:** {scenario_factory}")
         delta_lt = new_lt - current_lt
         delta_profit = new_profit - current_profit
@@ -384,18 +383,18 @@ elif page == "🔀 What-If Scenario":
     # Verdict
     if delta_lt < 0:
         st.success(
-            f"✅ This move saves **{abs(delta_lt):.0f} days** in lead time!")
+            f"This move saves **{abs(delta_lt):.0f} days** in lead time!")
     elif delta_lt > 0:
         st.warning(
-            f"⚠️ This move INCREASES lead time by **{delta_lt:.0f} days**!")
+            f"This move INCREASES lead time by **{delta_lt:.0f} days**!")
     else:
-        st.info("ℹ️ No change in lead time for this move.")
+        st.info("No change in lead time for this move.")
 
 # ============================================================
 # PAGE 4 - RECOMMENDATIONS
 # ============================================================
-elif page == "🏆 Recommendations":
-    st.title("🏆 Factory Reassignment Recommendations")
+elif page == "Recommendations":
+    st.title("Factory Reassignment Recommendations")
     st.markdown("Ranked factory reassignment suggestions with expected efficiency gains")
     st.markdown("---")
 
@@ -435,7 +434,7 @@ elif page == "🏆 Recommendations":
             filtered_recs['Improvement (Days)'] > 0]
 
     # Color coded table
-    st.subheader("📋 Recommendation Table")
+    st.subheader("Recommendation Table")
 
     def color_improvement(val):
         if val > 50:
@@ -445,16 +444,12 @@ elif page == "🏆 Recommendations":
         else:
             return 'background-color: #4a1c1c; color: white'
 
-    try:
-        styled_df = filtered_recs.style.map(
-            color_improvement, subset=['Improvement (Days)'])
-    except AttributeError:
-        styled_df = filtered_recs.style.applymap(
-            color_improvement, subset=['Improvement (Days)'])
+    styled_df = filtered_recs.style.applymap(
+        color_improvement, subset=['Improvement (Days)'])
     st.dataframe(styled_df, use_container_width=True)
 
     # Chart
-    st.subheader("📊 Improvement by Product")
+    st.subheader("Improvement by Product")
     fig = px.bar(filtered_recs, x='Product', y='Improvement (Days)',
                  color='Improvement (Days)',
                  color_continuous_scale='RdYlGn',
@@ -466,8 +461,8 @@ elif page == "🏆 Recommendations":
 # ============================================================
 # PAGE 5 - RISK & IMPACT
 # ============================================================
-elif page == "⚠️ Risk & Impact":
-    st.title("⚠️ Risk & Impact Panel")
+elif page == "Risk & Impact":
+    st.title("Risk & Impact Panel")
     st.markdown("Profit impact alerts and high-risk reassignment warnings")
     st.markdown("---")
 
@@ -480,16 +475,16 @@ elif page == "⚠️ Risk & Impact":
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.success(f"✅ Low Risk: {len(low_risk)} products")
+        st.success(f"Low Risk: {len(low_risk)} products")
     with col2:
-        st.warning(f"⚠️ Medium Risk: {len(medium_risk)} products")
+        st.warning(f"Medium Risk: {len(medium_risk)} products")
     with col3:
-        st.error(f"❌ High Risk: {len(high_risk)} products")
+        st.error(f"High Risk: {len(high_risk)} products")
 
     st.markdown("---")
 
     # High Risk Products
-    st.subheader("❌ High Risk Reassignments")
+    st.subheader("High Risk Reassignments")
     st.markdown("These products should NOT be reassigned — lead time would increase!")
     if len(high_risk) > 0:
         st.dataframe(high_risk[[
@@ -502,7 +497,7 @@ elif page == "⚠️ Risk & Impact":
     st.markdown("---")
 
     # Profit Impact
-    st.subheader("💰 Profit Impact Analysis")
+    st.subheader("Profit Impact Analysis")
     fig = px.scatter(recommendations_df,
                      x='Improvement (Days)',
                      y='Avg Gross Profit',
@@ -520,18 +515,18 @@ elif page == "⚠️ Risk & Impact":
     st.markdown("---")
 
     # Factory Risk Summary
-    st.subheader("🏭 Factory Performance Summary")
+    st.subheader("Factory Performance Summary")
     factory_summary = pd.DataFrame({
         'Factory': factory_avg_leadtime.index,
         'Avg Lead Time': factory_avg_leadtime.values,
         'Avg Profit': factory_avg_profit.values,
-        'Status': ['⚠️ Slow' if lt > factory_avg_leadtime.mean()
-                   else '✅ Fast' for lt in factory_avg_leadtime.values]
+        'Status': ['Slow' if lt > factory_avg_leadtime.mean()
+                   else 'Fast' for lt in factory_avg_leadtime.values]
     })
     st.dataframe(factory_summary, use_container_width=True)
 
     # Map
-    st.subheader("🗺️ Factory Risk Map")
+    st.subheader("Factory Risk Map")
     factory_map_df = factory_coords.merge(
         factory_summary, on='Factory')
     fig = px.scatter_geo(factory_map_df,
@@ -539,7 +534,7 @@ elif page == "⚠️ Risk & Impact":
                          text='Factory', scope='usa',
                          color='Status',
                          color_discrete_map={
-                             '⚠️ Slow': 'red', '✅ Fast': 'green'},
+                             'Slow': 'red', 'Fast': 'green'},
                          template='plotly_dark',
                          title='Factory Status Map')
     fig.update_traces(textposition='top center', marker=dict(size=15))
